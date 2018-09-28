@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans>
+    <bean name="scanXmlBean" class="com.ciicgat.springmyself.xml.ScanXmlBean">
+        <!--扫描的包-->
+        <property name="packageScan" value="com.ciicgat.springmyself"/>
+        <!--需要拦截的包-->
+        <property name="interceptorPackage" value="com.ciicgat.springmyself"/>
+        <!--是否开启异步-->
+        <property name="async" value="true"/>
+    </bean>
+</beans>
