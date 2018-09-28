@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class AutowiredProcessor {
 
-    public static void autowired() throws Exception {
+    public static void init() throws Exception {
         Map<String, BeanDefinition> beanDefinitionMap = IocContainer.beanDefinitionMap;
         for (Map.Entry<String, BeanDefinition> entry : beanDefinitionMap.entrySet()) {
             Object proxyObject = entry.getValue().getProxyObject();

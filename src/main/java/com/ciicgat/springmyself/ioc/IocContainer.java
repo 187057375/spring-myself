@@ -47,8 +47,8 @@ public class IocContainer {
     }
 
     public static void init() throws Exception {
-        ServiceProcessor.service();
-        AutowiredProcessor.autowired();
+        ServiceProcessor.init();
+        AutowiredProcessor.init();
         AspectProcessor.init();
     }
 }

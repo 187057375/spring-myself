@@ -69,7 +69,7 @@ public class ServiceProcessor {
         beanDefinitionMap.put(key, beanDefinition);
     }
 
-    public static void service() {
+    public static void init() {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext();
         IocContainer.scanXmlBean = JSONObject.parseObject(JSONObject.toJSONString(applicationContext.getBean("scanXmlBean")), ScanXmlBean.class);
         String[] packageScans = IocContainer.scanXmlBean.getPackageScan().split(",");
