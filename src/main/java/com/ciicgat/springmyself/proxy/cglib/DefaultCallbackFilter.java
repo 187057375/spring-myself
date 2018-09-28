@@ -1,5 +1,7 @@
 package com.ciicgat.springmyself.proxy.cglib;
 
+import com.ciicgat.springmyself.annotation.Async;
+import com.ciicgat.springmyself.annotation.advice.Aspect;
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
 import net.sf.cglib.proxy.NoOp;
@@ -13,11 +15,12 @@ public class DefaultCallbackFilter implements CallbackFilter {
 
     public static final Callback[] callbacks = new Callback[]{
             NoOp.INSTANCE,
-            AopCallback.INSTANCE
+            AopCallback.INSTANCE,
+            AsyncCallback.INSTANCE
     };
 
     public enum CallbackFilterEnum {
-        DEFAULT(0), INTERCEPTOR(1);
+        DEFAULT(0), INTERCEPTOR(1),ASYNC(2);
         private int code;
 
         CallbackFilterEnum(int code) {
@@ -38,6 +41,12 @@ public class DefaultCallbackFilter implements CallbackFilter {
 
     @Override
     public int accept(Method method) {
-        return CallbackFilterEnum.INTERCEPTOR.getCode();
+        if (method.isAnnotationPresent(Aspect.class)){
+            return CallbackFilterEnum.INTERCEPTOR.getCode();
+        }else if (method.isAnnotationPresent(Async.class)){
+            return CallbackFilterEnum.ASYNC.getCode();
+        }else {
+            return CallbackFilterEnum.DEFAULT.getCode();
+        }
     }
 }

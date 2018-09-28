@@ -1,6 +1,7 @@
 package com.ciicgat.springmyself.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ciicgat.springmyself.annotation.Async;
 import com.ciicgat.springmyself.annotation.Autowired;
 import com.ciicgat.springmyself.annotation.Service;
 import com.ciicgat.springmyself.annotation.advice.Advice;
@@ -22,7 +23,8 @@ public class StudentServiceImpl implements StudentService{
     @Autowired
     private PersonService personService;
 
-    @Advice(value = "StudentAspect")
+//    @Advice(value = "StudentAspect")
+    @Async
     @Override
     public Student getStudent(){
         Person person = personService.getPerson();
