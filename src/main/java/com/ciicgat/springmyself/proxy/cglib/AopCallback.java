@@ -57,7 +57,8 @@ public class AopCallback implements MethodInterceptor {
             } else if (declaredMethod.isAnnotationPresent(AfterThrowing.class)) {//环绕通知
                 methodMap.put("AfterThrowing", declaredMethod);
             } else if (declaredMethod.isAnnotationPresent(Around.class)) {//环绕通知
-                methodMap.put("Around", declaredMethod);
+                Method aroundMethod = proxyObject.getClass().getMethod(declaredMethod.getName(), Object.class, Object[].class, MethodProxy.class);
+                methodMap.put("Around", aroundMethod);
             } else if (declaredMethod.isAnnotationPresent(AfterReturning.class)) {//返回后通知
                 methodMap.put("AfterReturning", declaredMethod);
             } else if (declaredMethod.isAnnotationPresent(After.class)) {//返回后通知
@@ -67,30 +68,53 @@ public class AopCallback implements MethodInterceptor {
 
         //前置通知
         if (methodMap.get("Before") != null) {
-            methodMap.get("Before").invoke(proxyObject);
+            //如果是private修饰符的，则把可访问性设置为true
+            Method method1 = methodMap.get("Before");
+            if (!method1.isAccessible()) {
+                method1.setAccessible(true);
+            }
+            method1.invoke(proxyObject);
         }
         //环绕通知
-        if (methodMap.get("Around") != null) {
-            methodMap.get("Around").invoke(proxyObject);
-        }
+
+
         //目标方法
         try {
-            o = methodProxy.invokeSuper(obj, args);
+            if (methodMap.get("Around") != null) {
+                //如果是private修饰符的，则把可访问性设置为true
+                Method method1 = methodMap.get("Around");
+                if (!method1.isAccessible()) {
+                    method1.setAccessible(true);
+                }
+                o = method1.invoke(proxyObject,obj,args,methodProxy);
+            } else {
+                o = methodProxy.invokeSuper(obj, args);
+            }
         } catch (Exception e) {
             //被拦截方法
             if (methodMap.get("AfterThrowing") != null) {
-                methodMap.get("AfterThrowing").invoke(proxyObject);
+                //如果是private修饰符的，则把可访问性设置为true
+                Method method1 = methodMap.get("AfterThrowing");
+                if (!method1.isAccessible()) {
+                    method1.setAccessible(true);
+                }
+                method1.invoke(proxyObject);
             } else {
                 e.printStackTrace();
             }
         }
-        //环绕通知
-        if (methodMap.get("Around") != null) {
-            methodMap.get("Around").invoke(proxyObject);
-        }
+//        //环绕通知
+//        if (methodMap.get("Around") != null) {
+//            methodMap.get("Around").invoke(proxyObject);
+//        }
         //返回后通知
         if (methodMap.get("AfterReturning") != null) {
-            methodMap.get("AfterReturning").invoke(proxyObject);
+            //如果是private修饰符的，则把可访问性设置为true
+            Method method1 = methodMap.get("AfterReturning");
+            if (!method1.isAccessible()) {
+                method1.setAccessible(true);
+            }
+            method1.invoke(proxyObject);
         }
         return o;
     }

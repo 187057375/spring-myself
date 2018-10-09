@@ -23,8 +23,8 @@ public class StudentServiceImpl implements StudentService{
     @Autowired
     private PersonService personService;
 
-//    @Advice(value = "StudentAspect")
-    @Async
+    @Advice(value = "StudentAspect")
+//    @Async
     @Override
     public Student getStudent(){
         Person person = personService.getPerson();

@@ -1,6 +1,7 @@
 package com.ciicgat.springmyself.annotation.Aspect;
 
 import com.ciicgat.springmyself.annotation.advice.*;
+import net.sf.cglib.proxy.MethodProxy;
 
 /**
  * Company:中智关爱通(上海)
@@ -28,7 +29,10 @@ public class PersonAspect {
         System.out.println("-----------------------------PersonAspect afterThrowing-----------------------------");
     }
     @Around
-    public void around(){
-        System.out.println("-----------------------------PersonAspect around-----------------------------");
+    public Object around(Object obj,Object[] args, MethodProxy methodProxy) throws Throwable {
+        System.out.println("-----------------------------PersonAspect around start-----------------------------");
+        Object o = methodProxy.invokeSuper(obj, args);
+        System.out.println("-----------------------------PersonAspect around end-----------------------------");
+        return o;
     }
 }
