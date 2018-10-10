@@ -12,6 +12,7 @@ import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ import java.util.Map;
  * @Date：Created in 14:48 2018/9/25
  */
 public class ServiceProcessor {
+
+    public static Map<String, String> implMap = new HashMap<>();
 
     private static void createBeanDefinitionMap(String packageName, File file) throws Exception {
         if (file.isFile()) {
@@ -50,6 +53,10 @@ public class ServiceProcessor {
     }
 
     private static void initBeanDefinition(Class<?> clazz) {
+        Class<?>[] interfaces = clazz.getInterfaces();
+        if (interfaces != null && interfaces.length > 0) {
+            implMap.put(interfaces[0].getSimpleName(), clazz.getSimpleName());
+        }
         Map<String, BeanDefinition> beanDefinitionMap = IocContainer.beanDefinitionMap;
         final Service annotation = clazz.getAnnotation(Service.class);
         String key = null;
