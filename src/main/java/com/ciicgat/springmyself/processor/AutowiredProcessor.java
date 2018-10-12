@@ -23,7 +23,9 @@ public class AutowiredProcessor {
             Field[] declaredFields = superclass.getDeclaredFields();
             for (Field declaredField : declaredFields) {
                 if (declaredField.isAnnotationPresent(Autowired.class)) {
-                    String simpleName = declaredField.getType().getSimpleName()+"Impl";
+                    String simpleName = declaredField.getType().getSimpleName();
+                    //找到接口与实现类的绑定关系
+                    simpleName = ServiceProcessor.implMap.get(simpleName)==null?simpleName:ServiceProcessor.implMap.get(simpleName);
                     Object o2 = beanDefinitionMap.get(simpleName).getProxyObject();
                     if (o2 == null) {
                         throw new Exception("can not find bean " + simpleName);
